@@ -1,7 +1,8 @@
-from flask import Flask, render_template
-from database.db import get_db, init_db, seed_db
+from flask import Flask, render_template, request, redirect, url_for, flash
+from database.db import get_db, init_db, seed_db, find_user_by_email, create_user
 
 app = Flask(__name__)
+app.secret_key = "dev-secret-key-change-in-production"  # TODO: use env var in production
 
 
 # ------------------------------------------------------------------ #
@@ -13,9 +14,32 @@ def landing():
     return render_template("landing.html")
 
 
-@app.route("/register")
+@app.route("/register", methods=["GET", "POST"])
 def register():
-    return render_template("register.html")
+    if request.method == "GET":
+        return render_template("register.html")
+
+    name     = request.form.get("name", "").strip()
+    email    = request.form.get("email", "").strip()
+    password = request.form.get("password", "")
+    confirm  = request.form.get("confirm_password", "")
+
+    error = None
+    if not name or not email or not password or not confirm:
+        error = "All fields are required."
+    elif len(password) < 8:
+        error = "Password must be at least 8 characters."
+    elif password != confirm:
+        error = "Passwords do not match."
+    elif find_user_by_email(email):
+        error = "An account with that email already exists."
+
+    if error:
+        return render_template("register.html", error=error, name=name, email=email)
+
+    create_user(name, email, password)
+    flash("Account created! Please sign in.")
+    return redirect(url_for("login"))
 
 
 @app.route("/login")
