@@ -1,0 +1,289 @@
+/* ------------------------------------------------------------------ */
+/* Page wrapper                                                        */
+/* ------------------------------------------------------------------ */
+
+.profile-page {
+    padding: 2.5rem 2rem 4rem;
+}
+
+.profile-inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Card base                                                           */
+/* ------------------------------------------------------------------ */
+
+.profile-card {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Section 1 — User info card                                         */
+/* ------------------------------------------------------------------ */
+
+.profile-user-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.profile-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--paper-card);
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.profile-user-name {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+}
+
+.profile-user-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    margin-top: 0.25rem;
+}
+
+.profile-user-meta svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* Section 2 — Summary stats                                          */
+/* ------------------------------------------------------------------ */
+
+.profile-stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.profile-stat-card {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.profile-stat-icon svg {
+    width: 24px;
+    height: 24px;
+    color: var(--accent);
+}
+
+.profile-stat-label {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.profile-stat-value {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ */
+/* Section headers (shared by sections 3 & 4)                        */
+/* ------------------------------------------------------------------ */
+
+.profile-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.profile-section-header svg {
+    width: 20px;
+    height: 20px;
+    color: var(--accent);
+}
+
+.profile-section-title {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--ink);
+}
+
+/* ------------------------------------------------------------------ */
+/* Section 3 — Transaction table                                      */
+/* ------------------------------------------------------------------ */
+
+.profile-table-wrap {
+    overflow-x: auto;
+}
+
+.profile-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    min-width: 520px;
+}
+
+.profile-table thead th {
+    padding: 0.6rem 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink-muted);
+    background: var(--paper-warm);
+    border-bottom: 1px solid var(--border);
+}
+
+.profile-table tbody td {
+    padding: 0.875rem 1rem;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--ink);
+}
+
+.profile-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.profile-table tbody tr:hover td {
+    background: var(--accent-light);
+}
+
+.col-date {
+    color: var(--ink-muted);
+    white-space: nowrap;
+}
+
+.col-amount {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+}
+
+/* ------------------------------------------------------------------ */
+/* Category badges (sections 3 & 4)                                   */
+/* ------------------------------------------------------------------ */
+
+.profile-badge {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.775rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.badge-food          { background: var(--accent-2-light); color: var(--accent-2); }
+.badge-transport     { background: var(--accent-light);   color: var(--accent); }
+.badge-bills         { background: var(--danger-light);   color: var(--danger); }
+.badge-health        { background: var(--accent-light);   color: var(--accent); }
+.badge-entertainment { background: var(--accent-2-light); color: var(--accent-2); }
+.badge-shopping      { background: var(--paper-warm);     color: var(--ink-soft); }
+.badge-other         { background: var(--border-soft);    color: var(--ink-muted); }
+
+/* ------------------------------------------------------------------ */
+/* Section 4 — Category breakdown bars                                */
+/* ------------------------------------------------------------------ */
+
+.profile-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.profile-cat-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.profile-cat-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-cat-amount {
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.profile-bar-track {
+    height: 8px;
+    background: var(--border-soft);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.profile-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+.bar-fill-food          { background: var(--accent-2); }
+.bar-fill-transport     { background: var(--accent); }
+.bar-fill-bills         { background: var(--danger); }
+.bar-fill-health        { background: var(--accent); }
+.bar-fill-entertainment { background: var(--accent-2); }
+.bar-fill-shopping      { background: var(--ink-muted); }
+.bar-fill-other         { background: var(--ink-faint); }
+
+/* ------------------------------------------------------------------ */
+/* Responsive                                                          */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 768px) {
+    .profile-stats-row {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-user-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 600px) {
+    .profile-page {
+        padding: 1.5rem 1rem 3rem;
+    }
+
+    .profile-card {
+        padding: 1.25rem;
+    }
+
+    .profile-avatar {
+        width: 56px;
+        height: 56px;
+        font-size: 1.2rem;
+    }
+}
