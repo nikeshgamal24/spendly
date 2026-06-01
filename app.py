@@ -94,7 +94,50 @@ def logout():
 
 @app.route("/profile")
 def profile():
-    return render_template("profile.html")
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    user = {
+        "name": "Priya Sharma",
+        "email": "priya.sharma@example.com",
+        "member_since": "January 2026",
+        "initials": "PS",
+    }
+
+    stats = {
+        "total_spent": "₹37,225",
+        "transaction_count": 8,
+        "top_category": "Bills",
+    }
+
+    transactions = [
+        {"date": "25 May 2026", "description": "Restaurant dinner",      "category": "Food",          "amount": "₹5,575"},
+        {"date": "20 May 2026", "description": "Miscellaneous",          "category": "Other",         "amount": "₹2,500"},
+        {"date": "18 May 2026", "description": "Clothing",               "category": "Shopping",      "amount": "₹6,500"},
+        {"date": "14 May 2026", "description": "Streaming subscription", "category": "Entertainment", "amount": "₹1,899"},
+        {"date": "10 May 2026", "description": "Pharmacy",               "category": "Health",        "amount": "₹3,000"},
+        {"date": "07 May 2026", "description": "Electricity bill",       "category": "Bills",         "amount": "₹12,000"},
+        {"date": "05 May 2026", "description": "Bus pass top-up",        "category": "Transport",     "amount": "₹1,500"},
+        {"date": "01 May 2026", "description": "Groceries",              "category": "Food",          "amount": "₹4,251"},
+    ]
+
+    categories = [
+        {"name": "Bills",         "amount": "₹12,000", "pct": 32},
+        {"name": "Food",          "amount": "₹9,826",  "pct": 26},
+        {"name": "Shopping",      "amount": "₹6,500",  "pct": 17},
+        {"name": "Health",        "amount": "₹3,000",  "pct": 8},
+        {"name": "Other",         "amount": "₹2,500",  "pct": 7},
+        {"name": "Entertainment", "amount": "₹1,899",  "pct": 5},
+        {"name": "Transport",     "amount": "₹1,500",  "pct": 4},
+    ]
+
+    return render_template(
+        "profile.html",
+        user=user,
+        stats=stats,
+        transactions=transactions,
+        categories=categories,
+    )
 
 
 @app.route("/expenses/add")
