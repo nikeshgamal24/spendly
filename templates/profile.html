@@ -42,60 +42,71 @@
       </div>
     </div>
 
-    <!-- Transaction history -->
-    <div class="profile-card">
-      <div class="profile-section-header">
-        <i data-lucide="clock"></i>
-        <h2 class="profile-section-title">Transaction History</h2>
-      </div>
-      <div class="profile-table-wrap">
-        <table class="profile-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Description</th>
-              <th>Category</th>
-              <th class="col-amount">Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for tx in transactions %}
-            <tr>
-              <td class="col-date">{{ tx.date }}</td>
-              <td>{{ tx.description }}</td>
-              <td>
-                <span class="profile-badge badge-{{ tx.category | lower }}">
-                  {{ tx.category }}
-                </span>
-              </td>
-              <td class="col-amount">{{ tx.amount }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <!-- Bottom grid: history left, categories right -->
+    <div class="profile-bottom-grid">
 
-    <!-- Category breakdown -->
-    <div class="profile-card">
-      <div class="profile-section-header">
-        <i data-lucide="pie-chart"></i>
-        <h2 class="profile-section-title">Category Breakdown</h2>
-      </div>
-      <div class="profile-categories">
-        {% for cat in categories %}
-        <div class="profile-cat-row">
-          <div class="profile-cat-meta">
-            <span class="profile-badge badge-{{ cat.name | lower }}">{{ cat.name }}</span>
-            <span class="profile-cat-amount">{{ cat.amount }}</span>
-          </div>
-          <div class="profile-bar-track">
-            <div class="profile-bar-fill bar-fill-{{ cat.name | lower }}"
-                 style="width: {{ cat.pct }}%"></div>
-          </div>
+      <!-- Transaction history -->
+      <div class="profile-card">
+        <div class="profile-section-header">
+          <i data-lucide="clock"></i>
+          <h2 class="profile-section-title">Transaction History</h2>
         </div>
-        {% endfor %}
+        <div class="profile-table-wrap">
+          <table class="profile-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th class="col-amount">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for tx in transactions %}
+              <tr>
+                <td class="col-date">{{ tx.date }}</td>
+                <td>{{ tx.description }}</td>
+                <td>
+                  <span class="profile-badge badge-{{ tx.category | lower }}">
+                    {{ tx.category }}
+                  </span>
+                </td>
+                <td class="col-amount">{{ tx.amount }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
+
+      <!-- Category breakdown -->
+      <div class="profile-card profile-categories-card">
+        <div class="profile-section-header">
+          <i data-lucide="pie-chart"></i>
+          <h2 class="profile-section-title">Spending by Category</h2>
+        </div>
+        <div class="profile-categories">
+          {% for cat in categories %}
+          <div class="profile-cat-row">
+            <div class="profile-cat-meta">
+              <div class="profile-cat-label">
+                <span class="profile-cat-dot dot-{{ cat.name | lower }}"></span>
+                <span class="profile-cat-name">{{ cat.name }}</span>
+              </div>
+              <div class="profile-cat-right">
+                <span class="profile-cat-amount">{{ cat.amount }}</span>
+                <span class="profile-cat-pct">{{ cat.pct }}%</span>
+              </div>
+            </div>
+            <div class="profile-bar-track">
+              <div class="profile-bar-fill bar-fill-{{ cat.name | lower }}"
+                   style="width: {{ cat.pct }}%"></div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
     </div>
 
   </div>

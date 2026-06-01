@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, abort
 from werkzeug.security import check_password_hash
-from database.db import get_db, init_db, seed_db, find_user_by_email, create_user, get_user_by_id
+from database.db import get_db, init_db, seed_db, find_user_by_email, create_user
+from database.queries import get_user_by_id, get_recent_transactions, get_summary_stats, get_category_breakdown
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-key-change-in-production"  # TODO: use env var in production
@@ -97,39 +98,14 @@ def profile():
     if not session.get("user_id"):
         return redirect(url_for("login"))
 
-    user = {
-        "name": "Priya Sharma",
-        "email": "priya.sharma@example.com",
-        "member_since": "January 2026",
-        "initials": "PS",
-    }
+    user_id = session["user_id"]
+    user = get_user_by_id(user_id)
+    if user is None:
+        abort(403)
 
-    stats = {
-        "total_spent": "₹37,225",
-        "transaction_count": 8,
-        "top_category": "Bills",
-    }
-
-    transactions = [
-        {"date": "25 May 2026", "description": "Restaurant dinner",      "category": "Food",          "amount": "₹5,575"},
-        {"date": "20 May 2026", "description": "Miscellaneous",          "category": "Other",         "amount": "₹2,500"},
-        {"date": "18 May 2026", "description": "Clothing",               "category": "Shopping",      "amount": "₹6,500"},
-        {"date": "14 May 2026", "description": "Streaming subscription", "category": "Entertainment", "amount": "₹1,899"},
-        {"date": "10 May 2026", "description": "Pharmacy",               "category": "Health",        "amount": "₹3,000"},
-        {"date": "07 May 2026", "description": "Electricity bill",       "category": "Bills",         "amount": "₹12,000"},
-        {"date": "05 May 2026", "description": "Bus pass top-up",        "category": "Transport",     "amount": "₹1,500"},
-        {"date": "01 May 2026", "description": "Groceries",              "category": "Food",          "amount": "₹4,251"},
-    ]
-
-    categories = [
-        {"name": "Bills",         "amount": "₹12,000", "pct": 32},
-        {"name": "Food",          "amount": "₹9,826",  "pct": 26},
-        {"name": "Shopping",      "amount": "₹6,500",  "pct": 17},
-        {"name": "Health",        "amount": "₹3,000",  "pct": 8},
-        {"name": "Other",         "amount": "₹2,500",  "pct": 7},
-        {"name": "Entertainment", "amount": "₹1,899",  "pct": 5},
-        {"name": "Transport",     "amount": "₹1,500",  "pct": 4},
-    ]
+    stats        = get_summary_stats(user_id)
+    transactions = get_recent_transactions(user_id)
+    categories   = get_category_breakdown(user_id)
 
     return render_template(
         "profile.html",
