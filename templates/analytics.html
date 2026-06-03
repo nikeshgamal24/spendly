@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Analytics — Spendly{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/analytics.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="coming-soon-section">
+    <div class="coming-soon-inner">
+
+        <div class="coming-soon-icon">◎</div>
+
+        <span class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            Coming Soon
+        </span>
+
+        <h1 class="coming-soon-title">Analytics</h1>
+
+        <p class="coming-soon-subtitle">
+            We're building powerful insights into your spending habits.
+            Charts, trends, and breakdowns — all in one place.
+        </p>
+
+        <div class="coming-soon-features">
+            <div class="coming-soon-feature">
+                <span class="coming-soon-feature-icon">◑</span>
+                <span class="coming-soon-feature-label">Category Breakdown</span>
+                <p class="coming-soon-feature-body">Visual charts showing exactly where your money goes each month.</p>
+            </div>
+            <div class="coming-soon-feature">
+                <span class="coming-soon-feature-icon">↗</span>
+                <span class="coming-soon-feature-label">Spending Trends</span>
+                <p class="coming-soon-feature-body">Month-over-month comparisons to track your progress over time.</p>
+            </div>
+            <div class="coming-soon-feature">
+                <span class="coming-soon-feature-icon">◈</span>
+                <span class="coming-soon-feature-label">Smart Summaries</span>
+                <p class="coming-soon-feature-body">Weekly and monthly digests of your financial activity.</p>
+            </div>
+        </div>
+
+        <a href="{{ url_for('profile') }}" class="btn-primary">Back to Profile</a>
+
+    </div>
+</section>
+{% endblock %}
