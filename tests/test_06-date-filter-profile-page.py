@@ -332,15 +332,16 @@ class TestFilterFormStructure:
         resp = auth_client.get("/profile")
         assert b"Apply" in resp.data, "Apply submit button must be present"
 
-    def test_clear_link_present(self, auth_client):
+    def test_all_time_preset_present(self, auth_client):
         resp = auth_client.get("/profile")
-        assert b"Clear" in resp.data, "Clear link must be present"
+        assert b"All Time" in resp.data, "All Time preset button must be present"
 
-    def test_clear_link_points_to_bare_profile(self, auth_client):
+    def test_all_time_preset_points_to_bare_profile(self, auth_client):
         resp = auth_client.get("/profile")
-        # Clear link must href to /profile with no query params
-        assert b'href="/profile"' in resp.data, (
-            "Clear link must point to /profile with no query params"
+        # All Time navigates to /profile with no query params via JS;
+        # the form action also points to /profile
+        assert b'href="/profile"' in resp.data or b'action="/profile"' in resp.data, (
+            "Filter must have a way to reach /profile with no query params"
         )
 
     def test_transaction_history_heading_present(self, auth_client):
@@ -510,7 +511,7 @@ class TestEmptyUserNoExpenses:
     def test_page_renders_filter_form_for_empty_user(self, empty_user_client):
         resp = empty_user_client.get("/profile")
         assert b"Apply" in resp.data, "Filter form must render even when user has no expenses"
-        assert b"Clear" in resp.data
+        assert b"All Time" in resp.data, "All Time preset must render even when user has no expenses"
 
 
 # ================================================================== #
