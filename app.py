@@ -103,9 +103,19 @@ def profile():
     if user is None:
         abort(403)
 
-    stats        = get_summary_stats(user_id)
-    transactions = get_recent_transactions(user_id)
-    categories   = get_category_breakdown(user_id)
+    date_from_raw = request.args.get("from", "").strip()
+    date_to_raw   = request.args.get("to",   "").strip()
+
+    if date_from_raw and date_to_raw:
+        if date_from_raw > date_to_raw:
+            abort(400)
+        date_from, date_to = date_from_raw, date_to_raw
+    else:
+        date_from = date_to = None
+
+    stats        = get_summary_stats(user_id, date_from=date_from, date_to=date_to)
+    transactions = get_recent_transactions(user_id, date_from=date_from, date_to=date_to)
+    categories   = get_category_breakdown(user_id, date_from=date_from, date_to=date_to)
 
     return render_template(
         "profile.html",
@@ -113,6 +123,8 @@ def profile():
         stats=stats,
         transactions=transactions,
         categories=categories,
+        filter_from=date_from,
+        filter_to=date_to,
     )
 
 

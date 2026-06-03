@@ -42,6 +42,28 @@
       </div>
     </div>
 
+    <!-- Date range filter -->
+    <div class="profile-filter">
+      <form class="profile-filter-form" method="get" action="{{ url_for('profile') }}">
+        <div class="profile-filter-fields">
+          <div class="profile-filter-group">
+            <label class="profile-filter-label" for="filter-from">From</label>
+            <input id="filter-from" class="form-input profile-filter-input"
+                   type="date" name="from" value="{{ filter_from or '' }}">
+          </div>
+          <div class="profile-filter-group">
+            <label class="profile-filter-label" for="filter-to">To</label>
+            <input id="filter-to" class="form-input profile-filter-input"
+                   type="date" name="to" value="{{ filter_to or '' }}">
+          </div>
+          <div class="profile-filter-actions">
+            <button type="submit" class="btn-primary profile-filter-btn">Apply</button>
+            <a href="{{ url_for('profile') }}" class="btn-ghost profile-filter-btn">Clear</a>
+          </div>
+        </div>
+      </form>
+    </div>
+
     <!-- Bottom grid: history left, categories right -->
     <div class="profile-bottom-grid">
 

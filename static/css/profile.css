@@ -356,3 +356,71 @@
         font-size: 1.2rem;
     }
 }
+
+/* ── Date filter ──────────────────────────────────────────────── */
+.profile-filter {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem 2rem;
+}
+
+.profile-filter-fields {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.profile-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.profile-filter-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.profile-filter-input {
+    width: 160px;
+}
+
+.profile-filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.profile-filter-btn {
+    padding: 0.6rem 1.25rem;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 600px) {
+    .profile-filter {
+        padding: 1rem;
+    }
+
+    .profile-filter-fields {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .profile-filter-input {
+        width: 100%;
+    }
+
+    .profile-filter-actions {
+        flex-direction: column;
+    }
+
+    .profile-filter-btn {
+        width: 100%;
+        text-align: center;
+    }
+}
