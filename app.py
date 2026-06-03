@@ -1,3 +1,4 @@
+from datetime import date as _date
 from flask import Flask, render_template, request, redirect, url_for, flash, session, abort
 from werkzeug.security import check_password_hash
 from database.db import get_db, init_db, seed_db, find_user_by_email, create_user
@@ -103,9 +104,24 @@ def profile():
     if user is None:
         abort(403)
 
-    stats        = get_summary_stats(user_id)
-    transactions = get_recent_transactions(user_id)
-    categories   = get_category_breakdown(user_id)
+    date_from_raw = request.args.get("from", "").strip()
+    date_to_raw   = request.args.get("to",   "").strip()
+
+    if date_from_raw and date_to_raw:
+        try:
+            d_from = _date.fromisoformat(date_from_raw)
+            d_to   = _date.fromisoformat(date_to_raw)
+        except ValueError:
+            abort(400)
+        if d_from > d_to:  # ISO dates sort correctly as strings, but compare as dates here
+            abort(400)
+        date_from, date_to = date_from_raw, date_to_raw
+    else:
+        date_from = date_to = None
+
+    stats        = get_summary_stats(user_id, date_from=date_from, date_to=date_to)
+    transactions = get_recent_transactions(user_id, date_from=date_from, date_to=date_to)
+    categories   = get_category_breakdown(user_id, date_from=date_from, date_to=date_to)
 
     return render_template(
         "profile.html",
@@ -113,6 +129,8 @@ def profile():
         stats=stats,
         transactions=transactions,
         categories=categories,
+        filter_from=date_from,
+        filter_to=date_to,
     )
 
 

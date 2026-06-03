@@ -1,4 +1,16 @@
+from datetime import date as _date
+
 from database.db import get_db
+
+
+_MONTH_NAMES = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December",
+]
+_MONTH_ABBR = [
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+]
 
 
 def get_user_by_id(user_id):
@@ -18,11 +30,7 @@ def get_user_by_id(user_id):
     created_at = row["created_at"]  # "YYYY-MM-DD HH:MM:SS"
 
     year, month_num = created_at[:4], int(created_at[5:7])
-    month_names = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December",
-    ]
-    member_since = f"{month_names[month_num - 1]} {year}"
+    member_since = f"{_MONTH_NAMES[month_num - 1]} {year}"
 
     words = name.split()
     initials = "".join(w[0].upper() for w in words if w)[:2]
@@ -35,31 +43,40 @@ def get_user_by_id(user_id):
     }
 
 
-def get_recent_transactions(user_id, limit=10):
+def get_recent_transactions(user_id, limit=10, date_from=None, date_to=None):
     conn = get_db()
     try:
-        rows = conn.execute(
-            """
-            SELECT date, description, category, amount
-            FROM expenses
-            WHERE user_id = ?
-            ORDER BY date DESC
-            LIMIT ?
-            """,
-            (user_id, limit),
-        ).fetchall()
+        if date_from is not None and date_to is not None:
+            # Limit is intentionally removed when a date filter is active so
+            # the full filtered set is returned (per spec step 06).
+            rows = conn.execute(
+                """
+                SELECT date, description, category, amount
+                FROM expenses
+                WHERE user_id = ?
+                  AND date BETWEEN ? AND ?
+                ORDER BY date DESC
+                """,
+                (user_id, date_from, date_to),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                """
+                SELECT date, description, category, amount
+                FROM expenses
+                WHERE user_id = ?
+                ORDER BY date DESC
+                LIMIT ?
+                """,
+                (user_id, limit),
+            ).fetchall()
     finally:
         conn.close()
 
-    month_abbr = [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-    ]
     transactions = []
     for row in rows:
-        raw_date = row["date"]  # "YYYY-MM-DD"
-        year, month_num, day = raw_date[:4], int(raw_date[5:7]), raw_date[8:10]
-        formatted_date = f"{day} {month_abbr[month_num - 1]} {year}"
+        d = _date.fromisoformat(row["date"])
+        formatted_date = f"{d.day:02d} {_MONTH_ABBR[d.month - 1]} {d.year}"
         transactions.append({
             "date": formatted_date,
             "description": row["description"] or "",
@@ -69,30 +86,51 @@ def get_recent_transactions(user_id, limit=10):
     return transactions
 
 
-def get_summary_stats(user_id):
+def get_summary_stats(user_id, date_from=None, date_to=None):
     conn = get_db()
     try:
-        row = conn.execute(
-            "SELECT COUNT(*), SUM(amount) FROM expenses WHERE user_id = ?",
-            (user_id,),
-        ).fetchone()
+        if date_from is not None and date_to is not None:
+            row = conn.execute(
+                "SELECT COUNT(*), SUM(amount) FROM expenses WHERE user_id = ? AND date BETWEEN ? AND ?",
+                (user_id, date_from, date_to),
+            ).fetchone()
+        else:
+            row = conn.execute(
+                "SELECT COUNT(*), SUM(amount) FROM expenses WHERE user_id = ?",
+                (user_id,),
+            ).fetchone()
+
         transaction_count = row[0] or 0
         total_amount = row[1] or 0.0
 
         if transaction_count == 0:
             return {"total_spent": "₹0.00", "transaction_count": 0, "top_category": "—"}
 
-        top_row = conn.execute(
-            """
-            SELECT category, SUM(amount) AS cat_total
-            FROM expenses
-            WHERE user_id = ?
-            GROUP BY category
-            ORDER BY cat_total DESC
-            LIMIT 1
-            """,
-            (user_id,),
-        ).fetchone()
+        if date_from is not None and date_to is not None:
+            top_row = conn.execute(
+                """
+                SELECT category, SUM(amount) AS cat_total
+                FROM expenses
+                WHERE user_id = ?
+                  AND date BETWEEN ? AND ?
+                GROUP BY category
+                ORDER BY cat_total DESC
+                LIMIT 1
+                """,
+                (user_id, date_from, date_to),
+            ).fetchone()
+        else:
+            top_row = conn.execute(
+                """
+                SELECT category, SUM(amount) AS cat_total
+                FROM expenses
+                WHERE user_id = ?
+                GROUP BY category
+                ORDER BY cat_total DESC
+                LIMIT 1
+                """,
+                (user_id,),
+            ).fetchone()
     finally:
         conn.close()
 
@@ -104,19 +142,32 @@ def get_summary_stats(user_id):
     }
 
 
-def get_category_breakdown(user_id):
+def get_category_breakdown(user_id, date_from=None, date_to=None):
     conn = get_db()
     try:
-        rows = conn.execute(
-            """
-            SELECT category, SUM(amount) AS cat_total
-            FROM expenses
-            WHERE user_id = ?
-            GROUP BY category
-            ORDER BY cat_total DESC
-            """,
-            (user_id,),
-        ).fetchall()
+        if date_from is not None and date_to is not None:
+            rows = conn.execute(
+                """
+                SELECT category, SUM(amount) AS cat_total
+                FROM expenses
+                WHERE user_id = ?
+                  AND date BETWEEN ? AND ?
+                GROUP BY category
+                ORDER BY cat_total DESC
+                """,
+                (user_id, date_from, date_to),
+            ).fetchall()
+        else:
+            rows = conn.execute(
+                """
+                SELECT category, SUM(amount) AS cat_total
+                FROM expenses
+                WHERE user_id = ?
+                GROUP BY category
+                ORDER BY cat_total DESC
+                """,
+                (user_id,),
+            ).fetchall()
     finally:
         conn.close()
 

@@ -42,6 +42,25 @@
       </div>
     </div>
 
+    <!-- Date range filter -->
+    <div class="profile-filter">
+      <div class="profile-filter-bar">
+        <div class="profile-filter-presets">
+          <button type="button" class="profile-filter-preset" data-preset="all-time">All Time</button>
+          <button type="button" class="profile-filter-preset" data-preset="this-month">This Month</button>
+          <button type="button" class="profile-filter-preset" data-preset="last-3-months">Last 3 Months</button>
+          <button type="button" class="profile-filter-preset" data-preset="last-6-months">Last 6 Months</button>
+        </div>
+        <div class="profile-filter-sep"></div>
+        <form id="profile-filter-form" class="profile-filter-form" method="get" action="{{ url_for('profile') }}">
+          <input id="filter-from" class="profile-filter-input" type="date" name="from" value="{{ filter_from or '' }}">
+          <span class="profile-filter-to-sep">to</span>
+          <input id="filter-to" class="profile-filter-input" type="date" name="to" value="{{ filter_to or '' }}">
+          <button type="submit" class="profile-filter-apply">Apply</button>
+        </form>
+      </div>
+    </div>
+
     <!-- Bottom grid: history left, categories right -->
     <div class="profile-bottom-grid">
 
