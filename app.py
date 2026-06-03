@@ -1,3 +1,4 @@
+from datetime import date as _date
 from flask import Flask, render_template, request, redirect, url_for, flash, session, abort
 from werkzeug.security import check_password_hash
 from database.db import get_db, init_db, seed_db, find_user_by_email, create_user
@@ -107,7 +108,12 @@ def profile():
     date_to_raw   = request.args.get("to",   "").strip()
 
     if date_from_raw and date_to_raw:
-        if date_from_raw > date_to_raw:
+        try:
+            d_from = _date.fromisoformat(date_from_raw)
+            d_to   = _date.fromisoformat(date_to_raw)
+        except ValueError:
+            abort(400)
+        if d_from > d_to:  # ISO dates sort correctly as strings, but compare as dates here
             abort(400)
         date_from, date_to = date_from_raw, date_to_raw
     else:
