@@ -121,6 +121,29 @@
     align-items: center;
     gap: 0.5rem;
     margin-bottom: 1.25rem;
+    justify-content: space-between;
+}
+
+.profile-section-header .profile-section-title {
+    flex: 1;
+}
+
+.btn-add-expense-sm {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.4rem 1rem;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.btn-add-expense-sm:hover {
+    background: var(--accent);
 }
 
 .profile-section-header svg {
@@ -491,4 +514,10 @@
         text-align: center;
         border-radius: var(--radius-sm);
     }
+}
+
+.profile-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
 }
