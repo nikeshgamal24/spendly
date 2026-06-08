@@ -569,6 +569,84 @@
 }
 
 .btn-delete-expense:hover {
-    background: var(--danger, #e53e3e);
+    background: var(--danger);
     color: #fff;
+}
+
+/* ── Delete confirmation modal ─────────────────────────────── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-overlay[hidden] {
+    display: none;
+}
+
+.modal-dialog {
+    background: var(--paper-card);
+    border-radius: var(--radius-md);
+    padding: 2rem;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+}
+
+.modal-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 0 0 0.6rem;
+}
+
+.modal-body {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+.modal-btn-cancel {
+    padding: 0.45rem 1.1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: transparent;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, color 0.2s;
+}
+
+.modal-btn-cancel:hover {
+    background: var(--paper-warm);
+}
+
+.modal-btn-confirm {
+    padding: 0.45rem 1.1rem;
+    border: 1.5px solid var(--danger);
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #fff;
+    background: var(--danger);
+    cursor: pointer;
+    font-family: inherit;
+    transition: opacity 0.2s;
+}
+
+.modal-btn-confirm:hover {
+    opacity: 0.85;
 }

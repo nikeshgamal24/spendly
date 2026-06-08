@@ -96,8 +96,8 @@
                 <td class="col-actions">
                   <div class="action-btns">
                     <a href="{{ url_for('edit_expense', expense_id=tx.id) }}" class="btn-edit-expense">Edit</a>
-                    <form method="post" action="{{ url_for('delete_expense', id=tx.id) }}">
-                      <button type="submit" class="btn-delete-expense">Delete</button>
+                    <form method="post" action="{{ url_for('delete_expense', id=tx.id) }}" class="delete-form">
+                      <button type="button" class="btn-delete-expense" data-confirm-delete>Delete</button>
                     </form>
                   </div>
                 </td>
@@ -140,9 +140,49 @@
 
   </div>
 </div>
+<!-- Delete confirmation modal -->
+<div id="delete-modal" class="modal-overlay" hidden>
+  <div class="modal-dialog">
+    <h3 class="modal-title">Delete Expense</h3>
+    <p class="modal-body">Are you sure you want to delete this expense? This cannot be undone.</p>
+    <div class="modal-actions">
+      <button id="modal-cancel" class="modal-btn-cancel">Cancel</button>
+      <button id="modal-confirm" class="modal-btn-confirm">Yes, Delete</button>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script src="https://unpkg.com/lucide@latest"></script>
 <script>lucide.createIcons();</script>
+<script>
+(function () {
+  var pendingForm = null;
+  var modal = document.getElementById('delete-modal');
+
+  document.querySelectorAll('[data-confirm-delete]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      pendingForm = btn.closest('form');
+      modal.removeAttribute('hidden');
+    });
+  });
+
+  document.getElementById('modal-cancel').addEventListener('click', function () {
+    pendingForm = null;
+    modal.setAttribute('hidden', '');
+  });
+
+  document.getElementById('modal-confirm').addEventListener('click', function () {
+    if (pendingForm) pendingForm.submit();
+  });
+
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal) {
+      pendingForm = null;
+      modal.setAttribute('hidden', '');
+    }
+  });
+})();
+</script>
 {% endblock %}
