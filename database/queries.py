@@ -3,6 +3,8 @@ from datetime import date as _date
 from database.db import get_db
 
 
+CATEGORIES = ["Food", "Transport", "Bills", "Health", "Entertainment", "Shopping", "Other"]
+
 _MONTH_NAMES = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December",
@@ -11,6 +13,19 @@ _MONTH_ABBR = [
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
 ]
+
+
+def insert_expense(user_id, amount, category, date, description):
+    conn = get_db()
+    try:
+        cursor = conn.execute(
+            "INSERT INTO expenses (user_id, amount, category, date, description) VALUES (?, ?, ?, ?, ?)",
+            (user_id, amount, category, date, description or None),
+        )
+        conn.commit()
+        return cursor.lastrowid
+    finally:
+        conn.close()
 
 
 def get_user_by_id(user_id):

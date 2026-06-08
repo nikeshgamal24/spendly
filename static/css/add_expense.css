@@ -1,0 +1,145 @@
+.add-expense-container {
+    min-height: calc(100vh - 140px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.add-expense-card {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 480px;
+}
+
+.add-expense-header {
+    margin-bottom: 1.75rem;
+}
+
+.add-expense-title {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    color: var(--ink);
+    margin: 0 0 0.25rem;
+}
+
+.add-expense-subtitle {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    margin: 0;
+}
+
+.add-expense-error {
+    background: var(--danger-light);
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    margin-bottom: 1.25rem;
+}
+
+.add-expense-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    margin-bottom: 0.4rem;
+}
+
+.form-optional {
+    font-weight: 400;
+    color: var(--ink-faint);
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.65rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: var(--paper);
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: var(--accent);
+}
+
+.form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6b6b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+.currency-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.currency-symbol {
+    position: absolute;
+    left: 0.9rem;
+    color: var(--ink-muted);
+    font-size: 0.95rem;
+    pointer-events: none;
+}
+
+.currency-input {
+    padding-left: 2rem;
+}
+
+.add-expense-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 0.8rem;
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-submit:hover {
+    background: var(--accent);
+}
+
+.btn-ghost {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    text-align: center;
+    box-sizing: border-box;
+}
+

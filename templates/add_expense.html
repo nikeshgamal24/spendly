@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Add Expense — Spendly{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_expense.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="add-expense-container">
+  <div class="add-expense-card">
+
+    <div class="add-expense-header">
+      <h1 class="add-expense-title">Add Expense</h1>
+      <p class="add-expense-subtitle">Record a new transaction</p>
+    </div>
+
+    {% if error %}
+    <div class="add-expense-error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('add_expense') }}" class="add-expense-form">
+
+      <div class="form-group">
+        <label class="form-label" for="amount">Amount</label>
+        <div class="currency-input-wrapper">
+          <span class="currency-symbol">₹</span>
+          <input
+            class="form-input currency-input"
+            type="number"
+            id="amount"
+            name="amount"
+            step="0.01"
+            min="0.01"
+            placeholder="0.00"
+            value="{{ form.amount if form else '' }}"
+            required
+          >
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="category">Category</label>
+        <select class="form-input form-select" id="category" name="category" required>
+          <option value="" disabled {% if not form %}selected{% endif %}>Select a category</option>
+          {% for cat in categories %}
+          <option value="{{ cat }}" {% if form and form.category == cat %}selected{% endif %}>{{ cat }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="date">Date</label>
+        <input
+          class="form-input"
+          type="date"
+          id="date"
+          name="date"
+          value="{{ form.date if form else today }}"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="description">Description <span class="form-optional">(optional)</span></label>
+        <input
+          class="form-input"
+          type="text"
+          id="description"
+          name="description"
+          maxlength="200"
+          placeholder="e.g. Lunch with friends"
+          value="{{ form.description if form else '' }}"
+        >
+      </div>
+
+      <div class="add-expense-actions">
+        <button type="submit" class="btn-submit">Save Expense</button>
+        <a href="{{ url_for('profile') }}" class="btn-ghost">Cancel</a>
+      </div>
+
+    </form>
+  </div>
+</div>
+{% endblock %}

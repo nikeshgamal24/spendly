@@ -23,25 +23,6 @@
       </div>
     </div>
 
-    <!-- Summary stats -->
-    <div class="profile-stats-row">
-      <div class="profile-stat-card">
-        <span class="profile-stat-icon"><i data-lucide="indian-rupee"></i></span>
-        <span class="profile-stat-label">Total Spent</span>
-        <span class="profile-stat-value">{{ stats.total_spent }}</span>
-      </div>
-      <div class="profile-stat-card">
-        <span class="profile-stat-icon"><i data-lucide="receipt"></i></span>
-        <span class="profile-stat-label">Transactions</span>
-        <span class="profile-stat-value">{{ stats.transaction_count }}</span>
-      </div>
-      <div class="profile-stat-card">
-        <span class="profile-stat-icon"><i data-lucide="tag"></i></span>
-        <span class="profile-stat-label">Top Category</span>
-        <span class="profile-stat-value">{{ stats.top_category }}</span>
-      </div>
-    </div>
-
     <!-- Date range filter -->
     <div class="profile-filter">
       <div class="profile-filter-bar">
@@ -61,6 +42,25 @@
       </div>
     </div>
 
+    <!-- Summary stats -->
+    <div class="profile-stats-row">
+      <div class="profile-stat-card">
+        <span class="profile-stat-icon"><i data-lucide="indian-rupee"></i></span>
+        <span class="profile-stat-label">Total Spent</span>
+        <span class="profile-stat-value">{{ stats.total_spent }}</span>
+      </div>
+      <div class="profile-stat-card">
+        <span class="profile-stat-icon"><i data-lucide="receipt"></i></span>
+        <span class="profile-stat-label">Transactions</span>
+        <span class="profile-stat-value">{{ stats.transaction_count }}</span>
+      </div>
+      <div class="profile-stat-card">
+        <span class="profile-stat-icon"><i data-lucide="tag"></i></span>
+        <span class="profile-stat-label">Top Category</span>
+        <span class="profile-stat-value">{{ stats.top_category }}</span>
+      </div>
+    </div>
+
     <!-- Bottom grid: history left, categories right -->
     <div class="profile-bottom-grid">
 
@@ -68,7 +68,8 @@
       <div class="profile-card">
         <div class="profile-section-header">
           <i data-lucide="clock"></i>
-          <h2 class="profile-section-title">Transaction History</h2>
+          <h2 class="profile-section-title">Recent Transactions</h2>
+          <a href="{{ url_for('add_expense') }}" class="btn-add-expense-sm">+ Add Expense</a>
         </div>
         <div class="profile-table-wrap">
           <table class="profile-table">

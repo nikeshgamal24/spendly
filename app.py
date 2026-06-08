@@ -2,7 +2,7 @@ from datetime import date as _date
 from flask import Flask, render_template, request, redirect, url_for, flash, session, abort
 from werkzeug.security import check_password_hash
 from database.db import get_db, init_db, seed_db, find_user_by_email, create_user
-from database.queries import get_user_by_id, get_recent_transactions, get_summary_stats, get_category_breakdown
+from database.queries import get_user_by_id, get_recent_transactions, get_summary_stats, get_category_breakdown, insert_expense, CATEGORIES
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-key-change-in-production"  # TODO: use env var in production
@@ -141,9 +141,52 @@ def analytics():
     return render_template("analytics.html")
 
 
-@app.route("/expenses/add")
+@app.route("/expenses/add", methods=["GET", "POST"])
 def add_expense():
-    return "Add expense — coming in Step 7"
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    if request.method == "GET":
+        return render_template("add_expense.html", categories=CATEGORIES, today=_date.today().isoformat())
+
+    raw_amount  = request.form.get("amount", "").strip()
+    category    = request.form.get("category", "").strip()
+    raw_date    = request.form.get("date", "").strip()
+    description = request.form.get("description", "").strip()
+
+    error  = None
+    amount = None
+
+    if not raw_amount:
+        error = "Amount is required."
+    else:
+        try:
+            amount = float(raw_amount)
+            if amount <= 0:
+                error = "Amount must be greater than zero."
+        except ValueError:
+            error = "Amount must be a number."
+
+    if not error and category not in CATEGORIES:
+        error = "Please select a valid category."
+
+    if not error:
+        try:
+            _date.fromisoformat(raw_date)
+        except (ValueError, TypeError):
+            error = "Please enter a valid date (YYYY-MM-DD)."
+
+    if error:
+        return render_template(
+            "add_expense.html",
+            categories=CATEGORIES,
+            error=error,
+            form={"amount": raw_amount, "category": category, "date": raw_date, "description": description},
+        )
+
+    insert_expense(session["user_id"], amount, category, raw_date, description)
+    flash("Expense added!")
+    return redirect(url_for("profile"))
 
 
 @app.route("/expenses/<int:id>/edit")
