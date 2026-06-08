@@ -521,3 +521,28 @@
     justify-content: flex-end;
     margin-bottom: 1rem;
 }
+
+.col-actions {
+    width: 60px;
+    text-align: right;
+}
+
+.btn-edit-expense {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    background: var(--paper);
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.btn-edit-expense:hover {
+    background: var(--accent-light);
+    color: var(--accent);
+    border-color: var(--accent);
+}

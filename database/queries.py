@@ -58,6 +58,43 @@ def get_user_by_id(user_id):
     }
 
 
+def get_expense_by_id(expense_id, user_id):
+    conn = get_db()
+    try:
+        row = conn.execute(
+            "SELECT id, amount, category, date, description FROM expenses WHERE id = ? AND user_id = ?",
+            (expense_id, user_id),
+        ).fetchone()
+    finally:
+        conn.close()
+    if row is None:
+        return None
+    return {
+        "id":          row["id"],
+        "amount":      row["amount"],
+        "category":    row["category"],
+        "date":        row["date"],
+        "description": row["description"] or "",
+    }
+
+
+def update_expense(expense_id, user_id, amount, category, date, description):
+    conn = get_db()
+    try:
+        cursor = conn.execute(
+            """
+            UPDATE expenses
+               SET amount = ?, category = ?, date = ?, description = ?
+             WHERE id = ? AND user_id = ?
+            """,
+            (amount, category, date, description or None, expense_id, user_id),
+        )
+        conn.commit()
+        return cursor.rowcount
+    finally:
+        conn.close()
+
+
 def get_recent_transactions(user_id, limit=10, date_from=None, date_to=None):
     conn = get_db()
     try:
@@ -66,7 +103,7 @@ def get_recent_transactions(user_id, limit=10, date_from=None, date_to=None):
             # the full filtered set is returned (per spec step 06).
             rows = conn.execute(
                 """
-                SELECT date, description, category, amount
+                SELECT id, date, description, category, amount
                 FROM expenses
                 WHERE user_id = ?
                   AND date BETWEEN ? AND ?
@@ -77,7 +114,7 @@ def get_recent_transactions(user_id, limit=10, date_from=None, date_to=None):
         else:
             rows = conn.execute(
                 """
-                SELECT date, description, category, amount
+                SELECT id, date, description, category, amount
                 FROM expenses
                 WHERE user_id = ?
                 ORDER BY date DESC
@@ -93,10 +130,11 @@ def get_recent_transactions(user_id, limit=10, date_from=None, date_to=None):
         d = _date.fromisoformat(row["date"])
         formatted_date = f"{d.day:02d} {_MONTH_ABBR[d.month - 1]} {d.year}"
         transactions.append({
-            "date": formatted_date,
+            "id":          row["id"],
+            "date":        formatted_date,
             "description": row["description"] or "",
-            "category": row["category"],
-            "amount": f"₹{row['amount']:.2f}",
+            "category":    row["category"],
+            "amount":      f"₹{row['amount']:.2f}",
         })
     return transactions
 
