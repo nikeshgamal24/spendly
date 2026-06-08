@@ -523,26 +523,52 @@
 }
 
 .col-actions {
-    width: 60px;
+    width: 130px;
     text-align: right;
+}
+
+.action-btns {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.4rem;
 }
 
 .btn-edit-expense {
     display: inline-block;
     padding: 0.25rem 0.65rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--accent);
+    border-radius: 999px;
     font-size: 0.8rem;
     font-weight: 500;
-    color: var(--ink-soft);
-    background: var(--paper);
+    color: var(--accent);
+    background: transparent;
     text-decoration: none;
     transition: background 0.2s, color 0.2s;
     white-space: nowrap;
 }
 
 .btn-edit-expense:hover {
-    background: var(--accent-light);
-    color: var(--accent);
-    border-color: var(--accent);
+    background: var(--accent);
+    color: #fff;
+}
+
+.btn-delete-expense {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border: 1.5px solid var(--danger, #e53e3e);
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--danger, #e53e3e);
+    background: transparent;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+}
+
+.btn-delete-expense:hover {
+    background: var(--danger, #e53e3e);
+    color: #fff;
 }
