@@ -1,11 +1,42 @@
+import os
 from datetime import date as _date
 from flask import Flask, render_template, request, redirect, url_for, flash, session, abort
 from werkzeug.security import check_password_hash
 from database.db import get_db, init_db, seed_db, find_user_by_email, create_user
-from database.queries import get_user_by_id, get_recent_transactions, get_summary_stats, get_category_breakdown, insert_expense, CATEGORIES
+from database.queries import (
+    get_user_by_id, get_recent_transactions, get_summary_stats,
+    get_category_breakdown, insert_expense, get_expense_by_id,
+    update_expense, CATEGORIES,
+)
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-key-change-in-production"  # TODO: use env var in production
+
+
+# ------------------------------------------------------------------ #
+# Helpers                                                             #
+# ------------------------------------------------------------------ #
+
+def _validate_expense_form(raw_amount, category, raw_date):
+    """Returns (amount_float, None) on success or (None, error_str) on failure."""
+    if not raw_amount:
+        return None, "Amount is required."
+    try:
+        amount = float(raw_amount)
+        if amount <= 0:
+            return None, "Amount must be greater than zero."
+    except ValueError:
+        return None, "Amount must be a number."
+
+    if category not in CATEGORIES:
+        return None, "Please select a valid category."
+
+    try:
+        _date.fromisoformat(raw_date)
+    except (ValueError, TypeError):
+        return None, "Please enter a valid date (YYYY-MM-DD)."
+
+    return amount, None
 
 
 # ------------------------------------------------------------------ #
@@ -154,27 +185,7 @@ def add_expense():
     raw_date    = request.form.get("date", "").strip()
     description = request.form.get("description", "").strip()
 
-    error  = None
-    amount = None
-
-    if not raw_amount:
-        error = "Amount is required."
-    else:
-        try:
-            amount = float(raw_amount)
-            if amount <= 0:
-                error = "Amount must be greater than zero."
-        except ValueError:
-            error = "Amount must be a number."
-
-    if not error and category not in CATEGORIES:
-        error = "Please select a valid category."
-
-    if not error:
-        try:
-            _date.fromisoformat(raw_date)
-        except (ValueError, TypeError):
-            error = "Please enter a valid date (YYYY-MM-DD)."
+    amount, error = _validate_expense_form(raw_amount, category, raw_date)
 
     if error:
         return render_template(
@@ -189,9 +200,45 @@ def add_expense():
     return redirect(url_for("profile"))
 
 
-@app.route("/expenses/<int:id>/edit")
-def edit_expense(id):
-    return "Edit expense — coming in Step 8"
+@app.route("/expenses/<int:expense_id>/edit", methods=["GET", "POST"])
+def edit_expense(expense_id):
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    expense = get_expense_by_id(expense_id, session["user_id"])
+    if expense is None:
+        abort(404)
+
+    if request.method == "GET":
+        return render_template(
+            "edit_expense.html",
+            expense=expense,
+            categories=CATEGORIES,
+            selected_category=expense["category"],
+        )
+
+    raw_amount  = request.form.get("amount", "").strip()
+    category    = request.form.get("category", "").strip()
+    raw_date    = request.form.get("date", "").strip()
+    description = request.form.get("description", "").strip()
+
+    amount, error = _validate_expense_form(raw_amount, category, raw_date)
+
+    if error:
+        return render_template(
+            "edit_expense.html",
+            expense=expense,
+            categories=CATEGORIES,
+            selected_category=category,
+            error=error,
+            form={"amount": raw_amount, "category": category, "date": raw_date, "description": description},
+        )
+
+    rows_updated = update_expense(expense_id, session["user_id"], amount, category, raw_date, description)
+    if rows_updated == 0:
+        abort(404)
+    flash("Expense updated!")
+    return redirect(url_for("profile"))
 
 
 @app.route("/expenses/<int:id>/delete")
@@ -205,4 +252,4 @@ with app.app_context():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=os.environ.get("FLASK_DEBUG", "false").lower() == "true", port=5001)
