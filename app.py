@@ -6,7 +6,7 @@ from database.db import get_db, init_db, seed_db, find_user_by_email, create_use
 from database.queries import (
     get_user_by_id, get_recent_transactions, get_summary_stats,
     get_category_breakdown, insert_expense, get_expense_by_id,
-    update_expense, CATEGORIES,
+    update_expense, delete_expense as _delete_expense, CATEGORIES,
 )
 
 app = Flask(__name__)
@@ -241,9 +241,15 @@ def edit_expense(expense_id):
     return redirect(url_for("profile"))
 
 
-@app.route("/expenses/<int:id>/delete")
+@app.route("/expenses/<int:id>/delete", methods=["POST"])
 def delete_expense(id):
-    return "Delete expense — coming in Step 9"
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    rows_deleted = _delete_expense(id, session["user_id"])
+    if rows_deleted == 0:
+        abort(404)
+    flash("Expense deleted!")
+    return redirect(url_for("profile"))
 
 
 with app.app_context():
